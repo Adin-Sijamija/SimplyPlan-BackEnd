@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +35,7 @@ namespace SimplyPlan.API
             services.AddDbContext<SimplyPlanContext>(options=>options.UseSqlServer(Configuration.GetConnectionString("LocalTesting")));
 
             services.AddAutoMapper(typeof(MapperProfile));
-
+            services.AddCors();
             services.AddSwaggerGen();
         }
 
@@ -53,8 +54,12 @@ namespace SimplyPlan.API
                 c.RoutePrefix = string.Empty;
             });
 
-            app.UseHttpsRedirection();
 
+
+
+            app.UseHttpsRedirection();
+            app.UseCors(options =>
+            options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseRouting();
 
             app.UseAuthorization();
